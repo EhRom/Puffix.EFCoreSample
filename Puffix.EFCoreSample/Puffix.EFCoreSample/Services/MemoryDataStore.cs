@@ -47,7 +47,7 @@ namespace Puffix.EFCoreSample.Services
         /// </summary>
         /// <param name="item">Item to add.</param>
         /// <returns>Indicates whether the operation is a success or not.</returns>
-        public virtual Task<bool> AddItemAsync(ItemT item)
+        public virtual Task<bool> AddAsync(ItemT item)
         {
             // Check the item.
             if (item == null || itemsCollection.ContainsKey(item.Id))
@@ -64,7 +64,7 @@ namespace Puffix.EFCoreSample.Services
         /// </summary>
         /// <param name="item">Item to add.</param>
         /// <returns>Indicates whether the operation is a success or not.</returns>
-        public virtual Task<bool> UpdateItemAsync(ItemT item)
+        public virtual Task<bool> UpdateAsync(ItemT item)
         {
             // Check the item.
             if (item == null || !itemsCollection.ContainsKey(item.Id))
@@ -81,7 +81,7 @@ namespace Puffix.EFCoreSample.Services
         /// </summary>
         /// <param name="id">Id of the item to delete.</param>
         /// <returns>Indicates whether the operation is a success or not.</returns>
-        public virtual Task<bool> DeleteItemAsync(KeyT id)
+        public virtual Task<bool> DeleteAsync(KeyT id)
         { 
             // Check the item.
             if (!itemsCollection.ContainsKey(id))
@@ -98,7 +98,21 @@ namespace Puffix.EFCoreSample.Services
         /// </summary>
         /// <param name="id">Id of the item to get.</param>
         /// <returns>The matching item, or the null value, if not found.</returns>
-        public virtual Task<ItemT> GetItemAsync(KeyT id)
+        public virtual Task<bool> ExistsAsync(KeyT id)
+        {
+            // Check the item.
+            if (!itemsCollection.ContainsKey(id))
+                return Task.FromResult(false);
+
+            return Task.FromResult(true);
+        }
+
+        /// <summary>
+        /// Get a specified item (by id), from the store.
+        /// </summary>
+        /// <param name="id">Id of the item to get.</param>
+        /// <returns>The matching item, or the null value, if not found.</returns>
+        public virtual Task<ItemT> GetAsync(KeyT id)
         {
             // Check the item.
             if (!itemsCollection.ContainsKey(id))
@@ -112,7 +126,7 @@ namespace Puffix.EFCoreSample.Services
         /// </summary>
         /// <param name="forceRefresh">Indicates whether to refresh the list or not.</param>
         /// <returns>Items in the store.</returns>
-        public Task<IEnumerable<ItemT>> GetItemsAsync(bool forceRefresh = false)
+        public Task<IEnumerable<ItemT>> GetAllAsync(bool forceRefresh = false)
         {
             return Task.FromResult(itemsCollection.Values as IEnumerable<ItemT>);
         }

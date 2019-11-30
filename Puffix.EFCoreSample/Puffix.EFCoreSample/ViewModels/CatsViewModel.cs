@@ -23,7 +23,7 @@ namespace Puffix.EFCoreSample.ViewModels
             {
                 var newCat = cat as Cat;
                 Cats.Add(newCat);
-                await DataStore.AddItemAsync(newCat);
+                await DataStore.AddAsync(newCat);
             });
         }
 
@@ -37,7 +37,7 @@ namespace Puffix.EFCoreSample.ViewModels
             try
             {
                 Cats.Clear();
-                var cats = await DataStore.GetItemsAsync(true);
+                var cats = await DataStore.GetAllAsync(true);
                 foreach (var cat in cats)
                 {
                     Cats.Add(cat);

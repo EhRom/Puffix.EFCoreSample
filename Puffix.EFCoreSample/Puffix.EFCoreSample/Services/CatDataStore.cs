@@ -1,4 +1,5 @@
-﻿using Puffix.EFCoreSample.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using Puffix.EFCoreSample.Models;
 using System.Threading.Tasks;
 
 namespace Puffix.EFCoreSample.Services
@@ -6,12 +7,27 @@ namespace Puffix.EFCoreSample.Services
     /// <summary>
     /// Data store for cats.
     /// </summary>
-    public class CatDataStore : MemoryDataStore<Cat, int>
+    public class CatDataStore : SqliteDataStore<Cat, int> //MemoryDataStore<Cat, int>
     {
+
+        /// <summary>
+        /// Set of the items stored in the database.
+        /// </summary>
+        public override DbSet<Cat> Items
+        {
+            get => Cats;
+            set => Cats = value;
+        }
+
+
+        public DbSet<Cat> Cats { get; set; }
+
         /// <summary>
         /// Constructor.
         /// </summary>
-        public CatDataStore()
+        /// <param name="databasePath">Path to the file which contains the data.</param>
+        public CatDataStore(string databasePath)
+            : base(databasePath)
         { }
 
         /// <summary>
@@ -19,12 +35,12 @@ namespace Puffix.EFCoreSample.Services
         /// </summary>
         /// <param name="item">Item to add.</param>
         /// <returns>Indicates whether the operation is a success or not.</returns>
-        public override Task<bool> AddItemAsync(Cat item)
+        public override async Task<bool> AddAsync(Cat item)
         {
             if (item != null && item.Id == -1)
-                item.Id = itemsCollection.Count + 1;
-        
-            return base.AddItemAsync(item);
+                item.Id =  1 + (await Items.MaxAsync(c => c.Id));
+
+            return await base.AddAsync(item);
         }
     }
 }

@@ -17,34 +17,41 @@ namespace Puffix.EFCoreSample.Services
         /// </summary>
         /// <param name="item">Item to add.</param>
         /// <returns>Indicates whether the operation is a success or not.</returns>
-        Task<bool> AddItemAsync(ItemT item);
+        Task<bool> AddAsync(ItemT item);
 
         /// <summary>
         /// Update an existing iem in the store.
         /// </summary>
         /// <param name="item">Item to add.</param>
         /// <returns>Indicates whether the operation is a success or not.</returns>
-        Task<bool> UpdateItemAsync(ItemT item);
+        Task<bool> UpdateAsync(ItemT item);
 
         /// <summary>
         /// Delete an item in the store.
         /// </summary>
         /// <param name="id">Id of the item to delete.</param>
         /// <returns>Indicates whether the operation is a success or not.</returns>
-        Task<bool> DeleteItemAsync(KeyT id);
+        Task<bool> DeleteAsync(KeyT id);
+
+        /// <summary>
+        /// Test whether a specified item (by id), belongs to the store.
+        /// </summary>
+        /// <param name="id">Id of the item to test.</param>
+        /// <returns>Inidicates whether the item belongs to the store or not.</returns>
+        Task<bool> ExistsAsync(KeyT id);
 
         /// <summary>
         /// Get a specified item (by id), from the store.
         /// </summary>
         /// <param name="id">Id of the item to get.</param>
         /// <returns>The matching item, or the null value, if not found.</returns>
-        Task<ItemT> GetItemAsync(KeyT id);
+        Task<ItemT> GetAsync(KeyT id);
 
         /// <summary>
         /// Get all items of type <typeparamref name="ItemT"/> in the store.
         /// </summary>
         /// <param name="forceRefresh"></param>
         /// <returns></returns>
-        Task<IEnumerable<ItemT>> GetItemsAsync(bool forceRefresh = false);
+        Task<IEnumerable<ItemT>> GetAllAsync(bool forceRefresh = false);
     }
 }

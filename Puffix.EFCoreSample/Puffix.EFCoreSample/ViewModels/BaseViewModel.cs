@@ -1,16 +1,19 @@
-﻿using System;
+﻿using Puffix.EFCoreSample.Models;
+using Puffix.EFCoreSample.Services;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using Xamarin.Forms;
-using Puffix.EFCoreSample.Models;
-using Puffix.EFCoreSample.Services;
 
 namespace Puffix.EFCoreSample.ViewModels
 {
     public class BaseViewModel : INotifyPropertyChanged
     {
-        public IDataStore<Cat, int> DataStore => DependencyService.Get<IDataStore<Cat, int>>();
+        //public IDataStore<Cat, int> DataStore => DependencyService.Get<IDataStore<Cat, int>>();
+
+        // TODO vNext => use Autofac
+        public IDataStore<Cat, int> DataStore => App.DataStore;
+
 
         bool isBusy = false;
         public bool IsBusy
