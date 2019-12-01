@@ -64,7 +64,7 @@
                     <Label.FormattedText>
                         <FormattedString>
                             <FormattedString.Spans>
-                                <Span Text="This app ails to demonstrate how to integrate " />
+                                <Span Text="This app aims to demonstrate how to integrate " />
                                 <Span Text="EntityFrameworkCore.Sqlite" FontAttributes="Bold" />
                                 <Span Text=" in a Xamarin Application" />
                             </FormattedString.Spans>
