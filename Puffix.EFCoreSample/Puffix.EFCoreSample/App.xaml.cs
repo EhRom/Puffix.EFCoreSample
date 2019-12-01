@@ -13,19 +13,26 @@ namespace Puffix.EFCoreSample
     /// </summary>
     public partial class App : Application
     {
+        /// <summary>
+        /// Data store.
+        /// </summary>
         private static CatDataStore dataStore;
 
+        /// <summary>
+        /// Accessor to the data store.
+        /// </summary>
         public static CatDataStore DataStore => dataStore;
 
         /// <summary>
         /// Constructor.
         /// </summary>
         public App()
-        {
-            CreateDataStore();
-
+        {            
             // Initialze the application.
             InitializeComponent();
+
+            // Create the data store.
+            CreateDataStore();
 
             // TODO vNext use Autofac for IoC.
             //DependencyService.Register<CatDataStore>();
@@ -52,6 +59,9 @@ namespace Puffix.EFCoreSample
         protected override void OnResume()
         { }
 
+        /// <summary>
+        /// Create the data store.
+        /// </summary>
         private static void CreateDataStore()
         {
             // Build the database file path.

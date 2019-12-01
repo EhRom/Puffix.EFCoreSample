@@ -34,10 +34,12 @@ namespace Puffix.EFCoreSample.Services
         /// <returns>Indicates whether the operation is a success or not.</returns>
         public override async Task<bool> AddAsync(Cat item)
         {
-            if (item != null && item.Id == -1)
-                //item.Id = 1 + Items.Max(c => c.Id);
-                item.Id = 1 + (await Items.CountAsync() == 0 ? 0 : await Items.MaxAsync(c => c.Id));
+            // MemoryDataStore implementation.
+            //if (item != null && item.Id == -1)
+            //    item.Id = 1 + Items.Max(c => c.Id);
 
+            // Force the ID to 0 for the identity in Sqlite.
+            item.Id = 0;
             return await base.AddAsync(item);
         }
     }

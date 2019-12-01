@@ -17,6 +17,8 @@
         <Label Text="{Binding Cat.Name}" d:Text="Cat name" FontSize="Small"/>
         <Label Text="Description:" FontSize="Medium" />
         <Label Text="{Binding Cat.Color}" d:Text="Cat's color" FontSize="Small"/>
+        <Label Text="ID:" FontSize="Small" />
+        <Label Text="{Binding Cat.Id}" d:Text="Cat's ID" FontSize="Small"/>
     </StackLayout>
     
 </ContentPage>
