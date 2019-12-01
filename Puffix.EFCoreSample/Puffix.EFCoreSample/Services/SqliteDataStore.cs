@@ -16,37 +16,43 @@ namespace Puffix.EFCoreSample.Services
         where ItemT : class, IItem<KeyT>
     {
         /// <summary>
-        /// Set of the items stored in the database.
-        /// </summary>
-        public abstract DbSet<ItemT> Items { get; set; }
-
-        /// <summary>
         /// Path to the file which contains the data.
         /// </summary>
         private readonly string databasePath;
 
         /// <summary>
+        /// Set of the items stored in the database.
+        /// </summary>
+        protected abstract DbSet<ItemT> Items { get; }
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="databasePath">Path to the file which contains the data.</param>
-        public SqliteDataStore(string databasePath)
+        protected SqliteDataStore(string databasePath)
         {
             this.databasePath = databasePath;
         }
 
-
-        public static async Task<SqliteDataStore<ItemT, KeyT>> CreateAsync<DataSToreT>(string databasePath)
+        /// <summary>
+        /// Create an instance of the data store.
+        /// </summary>
+        /// <typeparam name="DataSToreT">Data store type.</typeparam>
+        /// <param name="databasePath">Path to the database file.</param>
+        /// <returns>Instanciated data store.</returns>
+        public static async Task<DataSToreT> CreateAsync<DataSToreT>(string databasePath)
             where DataSToreT : SqliteDataStore<ItemT, KeyT>
         {
             // Get the type of the data store, and create the instance.
             Type dataStoreType = typeof(DataSToreT);
 
             // Create an instance of that type
-            SqliteDataStore<ItemT, KeyT> dataStore = (SqliteDataStore<ItemT, KeyT>)Activator.CreateInstance(dataStoreType, databasePath);
+            DataSToreT dataStore = (DataSToreT)Activator.CreateInstance(dataStoreType, databasePath);
 
             // Configure the data store.
             await dataStore.Database.EnsureCreatedAsync();
             await dataStore.Database.MigrateAsync();
+
             return dataStore;
         }
 
@@ -72,7 +78,7 @@ namespace Puffix.EFCoreSample.Services
 
             await Items.AddAsync(item);
 
-            int result = await (this as DbContext).SaveChangesAsync();
+            int result = await SaveChangesAsync();
             return result > 0;
         }
 
@@ -88,7 +94,7 @@ namespace Puffix.EFCoreSample.Services
 
             Items.Attach(item);
 
-            int result = await (this as DbContext).SaveChangesAsync();
+            int result = await SaveChangesAsync();
             return result > 0;
         }
 
@@ -105,7 +111,7 @@ namespace Puffix.EFCoreSample.Services
             ItemT item = await GetAsync(id);
             Items.Remove(item);
 
-            int result = await (this as DbContext).SaveChangesAsync();
+            int result = await SaveChangesAsync();
             return result > 0;
         }
 
@@ -132,9 +138,8 @@ namespace Puffix.EFCoreSample.Services
         /// <summary>
         /// Get all items of type <typeparamref name="ItemT"/> in the store.
         /// </summary>
-        /// <param name="forceRefresh"></param>
-        /// <returns></returns>
-        public virtual async Task<IEnumerable<ItemT>> GetAllAsync(bool forceRefresh = false)
+        /// <returns>Items in the store.</returns>
+        public virtual async Task<IEnumerable<ItemT>> GetAllAsync()
         {
             return await Items.ToListAsync();
         }

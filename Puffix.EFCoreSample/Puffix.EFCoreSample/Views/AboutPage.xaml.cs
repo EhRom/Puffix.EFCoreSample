@@ -1,13 +1,18 @@
 ﻿using System.ComponentModel;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace Puffix.EFCoreSample.Views
 {
-    // Learn more about making custom code visible in the Xamarin.Forms previewer
-    // by visiting https://aka.ms/xamarinforms-previewer
+    /// <summary>
+    /// About page.
+    /// </summary>
     [DesignTimeVisible(false)]
     public partial class AboutPage : ContentPage
     {
+        /// <summary>
+        /// Consutructor.
+        /// </summary>
         public AboutPage()
         {
             InitializeComponent();

@@ -1,6 +1,9 @@
-﻿using Puffix.EFCoreSample.Services;
+﻿using Puffix.ConsoleLogMagnifier;
+using Puffix.EFCoreSample.Services;
+using System;
 using System.IO;
 using System.Threading.Tasks;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace Puffix.EFCoreSample
@@ -10,11 +13,6 @@ namespace Puffix.EFCoreSample
     /// </summary>
     public partial class App : Application
     {
-        /// <summary>
-        /// Root application path.
-        /// </summary>
-        private readonly string rootApplicationPath;
-
         private static CatDataStore dataStore;
 
         public static CatDataStore DataStore => dataStore;
@@ -22,9 +20,9 @@ namespace Puffix.EFCoreSample
         /// <summary>
         /// Constructor.
         /// </summary>
-        public App(string rootApplicationPath)
+        public App()
         {
-            this.rootApplicationPath = rootApplicationPath;
+            CreateDataStore();
 
             // Initialze the application.
             InitializeComponent();
@@ -40,30 +38,32 @@ namespace Puffix.EFCoreSample
         /// Actions when the application starts.
         /// </summary>
         protected override void OnStart()
-        {
-            // Initialize the data store.
-            string databasePath = Path.Combine(this.rootApplicationPath, "cats_data.db3");
-            //dataStore = new CatDataStore();
-
-            var createDataStoreTask = CatDataStore.CreateAsync<CatDataStore>(databasePath);
-            Task.WaitAll(createDataStoreTask);
-            dataStore = (CatDataStore)createDataStoreTask.Result;
-        }
+        { }
 
         /// <summary>
         /// Actions when the application goes to sleep.
         /// </summary>
         protected override void OnSleep()
-        {
-            // Handle when your app sleeps
-        }
+        { }
 
         /// <summary>
         /// Actions when the application resumes.
         /// </summary>
         protected override void OnResume()
+        { }
+
+        private static void CreateDataStore()
         {
-            // Handle when your app resumes
+            // Build the database file path.
+            string databasePath = Path.Combine(FileSystem.AppDataDirectory, "cats_data.db");
+            bool dbFileExists = File.Exists(databasePath);
+
+            ConsoleHelper.Write($"Create the datastore. The database files({databasePath}) exists? {dbFileExists}.");
+
+            // Initialize the data store.
+            var createDataStoreTask = CatDataStore.CreateAsync<CatDataStore>(databasePath);
+            Task.WaitAll(createDataStoreTask);
+            dataStore = createDataStoreTask.Result;
         }
     }
 }

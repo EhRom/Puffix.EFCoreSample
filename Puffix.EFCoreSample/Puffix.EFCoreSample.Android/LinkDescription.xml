@@ -12,7 +12,8 @@
         for mentions of "GetRuntimeMethod" at https://github.com/aspnet/EntityFramework. Use of EF Core more
         advanced than this sample may require additional types/methods added to those below.
   -->
-  <assembly fullname="mscorlib">
+  <!--<assembly fullname="mscorlib">
     <type fullname="System.DateTime" preserve="methods" />
-  </assembly>
+  </assembly>-->
+
 </linker>

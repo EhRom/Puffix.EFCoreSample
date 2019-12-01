@@ -1,9 +1,7 @@
-﻿using System;
-using Android.App;
+﻿using Android.App;
 using Android.Content.PM;
-using Android.Runtime;
 using Android.OS;
-using Environment = System.Environment;
+using Android.Runtime;
 
 namespace Puffix.EFCoreSample.Droid
 {
@@ -17,14 +15,12 @@ namespace Puffix.EFCoreSample.Droid
 
             base.OnCreate(savedInstanceState);
 
-            string dataRootPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-
             global::Xamarin.Forms.Forms.SetFlags("CollectionView_Experimental");
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
-            LoadApplication(new App(dataRootPath));
+            LoadApplication(new App());
         }
-        public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
+        public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Permission[] grantResults)
         {
             Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
 

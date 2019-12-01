@@ -9,17 +9,14 @@ namespace Puffix.EFCoreSample.Services
     /// </summary>
     public class CatDataStore : SqliteDataStore<Cat, int> //MemoryDataStore<Cat, int>
     {
-
         /// <summary>
         /// Set of the items stored in the database.
         /// </summary>
-        public override DbSet<Cat> Items
-        {
-            get => Cats;
-            set => Cats = value;
-        }
+        protected override DbSet<Cat> Items => Cats;
 
-
+        /// <summary>
+        /// Set of cats. Represents teh data in the data store.
+        /// </summary>
         public DbSet<Cat> Cats { get; set; }
 
         /// <summary>
@@ -38,7 +35,8 @@ namespace Puffix.EFCoreSample.Services
         public override async Task<bool> AddAsync(Cat item)
         {
             if (item != null && item.Id == -1)
-                item.Id =  1 + (await Items.MaxAsync(c => c.Id));
+                //item.Id = 1 + Items.Max(c => c.Id);
+                item.Id = 1 + (await Items.CountAsync() == 0 ? 0 : await Items.MaxAsync(c => c.Id));
 
             return await base.AddAsync(item);
         }

@@ -50,8 +50,7 @@ namespace Puffix.EFCoreSample.Services
         /// <summary>
         /// Get all items of type <typeparamref name="ItemT"/> in the store.
         /// </summary>
-        /// <param name="forceRefresh"></param>
-        /// <returns></returns>
-        Task<IEnumerable<ItemT>> GetAllAsync(bool forceRefresh = false);
+        /// <returns>Items in the store.</returns>
+        Task<IEnumerable<ItemT>> GetAllAsync();
     }
 }

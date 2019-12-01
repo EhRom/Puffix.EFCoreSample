@@ -1,4 +1,5 @@
 ﻿using Puffix.EFCoreSample.Models;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -15,14 +16,37 @@ namespace Puffix.EFCoreSample.Services
         /// <summary>
         /// Local data store.
         /// </summary>
-        protected readonly IDictionary<KeyT, ItemT> itemsCollection;
+        private readonly IDictionary<KeyT, ItemT> itemsCollection;
+
+        /// <summary>
+        /// Collection of the stored items.
+        /// </summary>
+        public IEnumerable<ItemT> Items => itemsCollection.Values;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public MemoryDataStore()
+        protected MemoryDataStore()
         {
             itemsCollection = new Dictionary<KeyT, ItemT>();
+        }
+
+        /// <summary>
+        /// Create an instance of the data store.
+        /// </summary>
+        /// <typeparam name="DataSToreT">Data store type.</typeparam>
+        /// <param name="databasePath">Path to the database file.</param>
+        /// <returns>Instanciated data store.</returns>
+        public static Task<DataSToreT> CreateAsync<DataSToreT>(string databasePath)
+            where DataSToreT : MemoryDataStore<ItemT, KeyT>
+        {
+            // Get the type of the data store, and create the instance.
+            Type dataStoreType = typeof(DataSToreT);
+
+            // Create an instance of that type
+            DataSToreT dataStore = (DataSToreT)Activator.CreateInstance(dataStoreType, databasePath);
+
+            return Task.FromResult(dataStore);
         }
 
         /// <summary>
@@ -35,7 +59,7 @@ namespace Puffix.EFCoreSample.Services
 
             foreach (var item in items)
             {
-                if(item != null && !itemsCollection.ContainsKey(item.Id))
+                if (item != null && !itemsCollection.ContainsKey(item.Id))
                 {
                     itemsCollection.Add(item.Id, item);
                 }
@@ -55,7 +79,7 @@ namespace Puffix.EFCoreSample.Services
 
             // Add item in the store.
             itemsCollection.Add(item.Id, item);
-            
+
             return Task.FromResult(true);
         }
 
@@ -82,7 +106,7 @@ namespace Puffix.EFCoreSample.Services
         /// <param name="id">Id of the item to delete.</param>
         /// <returns>Indicates whether the operation is a success or not.</returns>
         public virtual Task<bool> DeleteAsync(KeyT id)
-        { 
+        {
             // Check the item.
             if (!itemsCollection.ContainsKey(id))
                 return Task.FromResult(false);
@@ -124,9 +148,8 @@ namespace Puffix.EFCoreSample.Services
         /// <summary>
         /// Get all items of type <typeparamref name="ItemT"/> in the store.
         /// </summary>
-        /// <param name="forceRefresh">Indicates whether to refresh the list or not.</param>
         /// <returns>Items in the store.</returns>
-        public Task<IEnumerable<ItemT>> GetAllAsync(bool forceRefresh = false)
+        public Task<IEnumerable<ItemT>> GetAllAsync()
         {
             return Task.FromResult(itemsCollection.Values as IEnumerable<ItemT>);
         }

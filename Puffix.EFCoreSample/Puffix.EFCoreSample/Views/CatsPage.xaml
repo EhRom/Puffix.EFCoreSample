@@ -19,7 +19,7 @@
                 HasUnevenRows="true"
                 RefreshCommand="{Binding LoadCatsCommand}"
                 IsPullToRefreshEnabled="true"
-                IsRefreshing="{Binding IsBusy, Mode=OneWay}"
+                IsRefreshing="{Binding IsBusy, Mode=TwoWay}"
                 CachingStrategy="RecycleElement"
                 ItemSelected="OnCatSelected">
             <d:ListView.ItemsSource>

@@ -8,39 +8,63 @@ using Xamarin.Forms;
 
 namespace Puffix.EFCoreSample.ViewModels
 {
+    /// <summary>
+    /// Cats view model.
+    /// </summary>
     public class CatsViewModel : BaseViewModel
     {
+        /// <summary>
+        /// List of the cats displayed.
+        /// </summary>
         public ObservableCollection<Cat> Cats { get; set; }
-        public Command LoadItemsCommand { get; set; }
 
+        /// <summary>
+        /// Command to load cats.
+        /// </summary>
+        public Command LoadCatsCommand { get; set; }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
         public CatsViewModel()
         {
             Title = "Browse";
             Cats = new ObservableCollection<Cat>();
-            LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
+            LoadCatsCommand = new Command(async () => await ExecuteLoadCatsCommand());
 
             MessagingCenter.Subscribe<NewCatPage, Cat>(this, "AddCat", async (obj, cat) =>
             {
                 var newCat = cat as Cat;
                 Cats.Add(newCat);
-                await DataStore.AddAsync(newCat);
+                if (DataStore != null)
+                    await DataStore.AddAsync(newCat);
+            });
+            MessagingCenter.Subscribe<CatDetailPage, Cat>(this, "RemoveCat", async (obj, cat) =>
+            {
+                var catToRemove = cat as Cat;
+
+                if (DataStore != null)
+                    await DataStore.DeleteAsync(catToRemove.Id);
             });
         }
 
-        async Task ExecuteLoadItemsCommand()
+        /// <summary>
+        /// Execute the LoadCats command.
+        /// </summary>
+        /// <returns>Asynchronous task.</returns>
+        private async Task ExecuteLoadCatsCommand()
         {
-            if (IsBusy)
-                return;
-
-            IsBusy = true;
-
             try
             {
                 Cats.Clear();
-                var cats = await DataStore.GetAllAsync(true);
-                foreach (var cat in cats)
+                if (DataStore != null)
                 {
-                    Cats.Add(cat);
+                    var cats = await DataStore.GetAllAsync();
+
+                    foreach (var cat in cats)
+                    {
+                        Cats.Add(cat);
+                    }
                 }
             }
             catch (Exception error)
