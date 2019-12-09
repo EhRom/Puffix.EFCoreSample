@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace Puffix.EFCoreSample.Views
